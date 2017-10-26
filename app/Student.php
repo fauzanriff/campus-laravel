@@ -94,18 +94,32 @@
     }
 
     /*
-    * Return true if foreach element in niklist doesnt have
+    * Return true if
+    * Not found similar nik in DB OR
+    * Match nik in DB has similar name and age
     */
-    public function isNikValid($niklist)
+    public function isNikValid()
     {
-      for($i = 0; $i < count($niklist); $i++)
-      {
-        if($this->nik === $niklist[$i])
+      // Get students data from db
+      $students = DB::table('students')->get();
+
+      foreach ($students as $student) {
+        if ($this->nik === $student->getNik())
         {
-          return false;
+          // NIK already registered in DB, (assume that DB have unique NIK) but it's possible that's our object has same nik with DB as long the name and age is the same.
+          if($this->name === $student->getName() && $this->age === $student->getAge())
+          {
+            return true;
+          }
+          // Different name or age for the registered nik return false
+          else
+          {
+            return false;
+          }
         }
       }
 
+      // Not found similar nik in DB
       return true;
     }
 
@@ -123,5 +137,3 @@
     }
 
   }
-
->
