@@ -1,6 +1,8 @@
 <?php
   namespace App;
 
+  use Illuminate\Support\Facades\DB;
+
   /*
   * Student
   */
@@ -104,10 +106,10 @@
       $students = DB::table('students')->get();
 
       foreach ($students as $student) {
-        if ($this->nik === $student->getNik())
+        if ($this->nik === $student->nik)
         {
           // NIK already registered in DB, (assume that DB have unique NIK) but it's possible that's our object has same nik with DB as long the name and age is the same.
-          if($this->name === $student->getName() && $this->age === $student->getAge())
+          if($this->name === $student->name && $this->age === $student->age)
           {
             return true;
           }

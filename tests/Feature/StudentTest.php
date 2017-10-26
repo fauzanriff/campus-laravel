@@ -4,10 +4,13 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use App\Student;
 
 class StudentTest extends TestCase
 {
+  use RefreshDatabase;
+
     /**
      * Test name with string data type
      */
@@ -35,7 +38,12 @@ class StudentTest extends TestCase
      */
     public function testNikUnique()
     {
-        $this->assertTrue(true);
+      // Create student for testing. This insert method will refresh after the testing success.
+      DB::table('students')->insert(
+          ['name' => 'Budi', 'nik' => 999999, 'age' => 18]
+      );
+      $student = new Student("Aryo", 999998, 19);
+      $this->assertTrue($student->isNikValid());
     }
 
     /**
@@ -43,7 +51,16 @@ class StudentTest extends TestCase
      */
     public function testNikExistInDB()
     {
-        $this->assertTrue(true);
+      // Create student for testing. This insert method will refresh after the testing success.
+      DB::table('students')->insert(
+          ['name' => 'Budi', 'nik' => 999999, 'age' => 18]
+      );
+      $student = new Student("Aryo", 999999, 19);
+      $this->assertFalse($student->isNikValid());
+      $student = new Student("Budi", 999999, 18);
+      $this->assertTrue($student->isNikValid());
+      $student = new Student("Budi", 999999, 19);
+      $this->assertFalse($student->isNikValid());
     }
 
     /**
